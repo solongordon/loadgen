@@ -90,6 +90,10 @@ func (n newOrder) run(db *sql.DB, wID int, a *auditor) (interface{}, error) {
 	}
 	d.items = make([]orderItem, d.oOlCnt)
 
+	a.Lock()
+	a.orderLinesFreq[d.oOlCnt]++
+	a.Unlock()
+
 	// itemIDs tracks the item ids in the order so that we can prevent adding
 	// multiple items with the same ID. This would not make sense because each
 	// orderItem already tracks a quantity that can be larger than 1.

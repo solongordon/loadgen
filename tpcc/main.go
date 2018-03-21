@@ -229,7 +229,7 @@ func main() {
 
 	start := time.Now()
 	errCh := make(chan error)
-	audit := auditor{}
+	audit := newAuditor()
 	var wg sync.WaitGroup
 	for i := range workers {
 		w := i % *warehouses
@@ -237,7 +237,7 @@ func main() {
 		// partitionTables().
 		p := (w * *partitions) / *warehouses
 		dbs := partitionDBs[p]
-		workers[i] = newWorker(i, w, dbs[w%len(dbs)], &wg, &audit)
+		workers[i] = newWorker(i, w, dbs[w%len(dbs)], &wg, audit)
 	}
 
 	go func() {
